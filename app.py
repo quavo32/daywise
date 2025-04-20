@@ -33,12 +33,27 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     dark_mode = db.Column(db.Boolean, default=False)
     tasks = db.relationship('Task', backref='user', lazy='dynamic')
+    categories = db.relationship('Category', backref='user', lazy='dynamic')
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
         
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    color = db.Column(db.String(20), default='blue')
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    tasks = db.relationship('Task', backref='category', lazy='dynamic')
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'color': self.color
+        }
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -48,6 +63,7 @@ class Task(db.Model):
     priority = db.Column(db.String(20), default='medium')
     time_block = db.Column(db.String(20), default='any')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     def to_dict(self):
@@ -57,7 +73,8 @@ class Task(db.Model):
             'estimatedTime': self.estimated_time,
             'isCompleted': self.is_completed,
             'priority': self.priority,
-            'timeBlock': self.time_block
+            'timeBlock': self.time_block,
+            'categoryId': self.category_id
         }
 
 @login_manager.user_loader
@@ -124,15 +141,30 @@ def register():
         new_user = User(username=username)
         new_user.set_password(password)
         
+        # Add default categories
+        default_categories = [
+            Category(name="Work", color="blue", user=new_user),
+            Category(name="Personal", color="green", user=new_user),
+            Category(name="Health", color="red", user=new_user),
+            Category(name="Learning", color="purple", user=new_user)
+        ]
+        
         # Add sample tasks for new users
+        work_category = default_categories[0]
+        personal_category = default_categories[1]
+        health_category = default_categories[2]
+        learning_category = default_categories[3]
+        
         sample_tasks = [
-            Task(description='Morning workout', estimated_time=45, is_completed=False, priority='medium', time_block='morning', user=new_user),
-            Task(description='Team meeting', estimated_time=60, is_completed=False, priority='high', time_block='morning', user=new_user),
-            Task(description='Work on Project X', estimated_time=120, is_completed=False, priority='high', time_block='afternoon', user=new_user),
-            Task(description='Read documentation', estimated_time=30, is_completed=True, priority='low', time_block='any', user=new_user)
+            Task(description='Morning workout', estimated_time=45, is_completed=False, priority='medium', time_block='morning', user=new_user, category=health_category),
+            Task(description='Team meeting', estimated_time=60, is_completed=False, priority='high', time_block='morning', user=new_user, category=work_category),
+            Task(description='Work on Project X', estimated_time=120, is_completed=False, priority='high', time_block='afternoon', user=new_user, category=work_category),
+            Task(description='Read documentation', estimated_time=30, is_completed=True, priority='low', time_block='any', user=new_user, category=learning_category)
         ]
         
         db.session.add(new_user)
+        for category in default_categories:
+            db.session.add(category)
         for task in sample_tasks:
             db.session.add(task)
         db.session.commit()
@@ -152,7 +184,18 @@ def logout():
 @login_required
 def dashboard():
     gregorian_date, hijri_date = get_dates()
-    tasks = Task.query.filter_by(user_id=current_user.id).all()
+    
+    # Get filter parameters
+    category_id = request.args.get('category', 'all')
+    
+    # Get all tasks for the user
+    if category_id == 'all' or category_id is None:
+        tasks = Task.query.filter_by(user_id=current_user.id).all()
+    else:
+        tasks = Task.query.filter_by(user_id=current_user.id, category_id=category_id).all()
+    
+    # Get all categories for the user
+    categories = Category.query.filter_by(user_id=current_user.id).all()
     
     # Calculate progress
     total_tasks = len(tasks)
@@ -174,6 +217,8 @@ def dashboard():
         hijri_date=hijri_date,
         PRIORITIES=PRIORITIES,
         TIME_BLOCKS=TIME_BLOCKS,
+        categories=categories,
+        current_category=category_id,
         dark_mode=current_user.dark_mode
     )
 
@@ -209,16 +254,26 @@ def add_task():
     estimated_time = request.form.get('estimated_time')
     priority = request.form.get('priority')
     time_block = request.form.get('time_block')
+    category_id = request.form.get('category_id')
     
     if not description or not estimated_time or int(estimated_time) <= 0:
         flash('Please enter a valid task description and estimated time.')
         return redirect(url_for('dashboard'))
+    
+    # Validate category belongs to user
+    if category_id and category_id != 'none':
+        category = Category.query.filter_by(id=category_id, user_id=current_user.id).first()
+        if not category:
+            category_id = None
+    else:
+        category_id = None
     
     new_task = Task(
         description=description,
         estimated_time=int(estimated_time),
         priority=priority,
         time_block=time_block,
+        category_id=category_id,
         user_id=current_user.id
     )
     
@@ -244,15 +299,25 @@ def edit_task(task_id):
     estimated_time = request.form.get('estimated_time')
     priority = request.form.get('priority')
     time_block = request.form.get('time_block')
+    category_id = request.form.get('category_id')
     
     if not description or not estimated_time or int(estimated_time) <= 0:
         flash('Please enter a valid task description and estimated time.')
         return redirect(url_for('dashboard'))
     
+    # Validate category belongs to user
+    if category_id and category_id != 'none':
+        category = Category.query.filter_by(id=category_id, user_id=current_user.id).first()
+        if not category:
+            category_id = None
+    else:
+        category_id = None
+    
     task.description = description
     task.estimated_time = int(estimated_time)
     task.priority = priority
     task.time_block = time_block
+    task.category_id = category_id
     
     db.session.commit()
     return redirect(url_for('dashboard'))
@@ -271,6 +336,71 @@ def reset_all_tasks():
     tasks = Task.query.filter_by(user_id=current_user.id).all()
     for task in tasks:
         task.is_completed = False
+    db.session.commit()
+    return redirect(url_for('dashboard'))
+
+# Category management routes
+@app.route('/add_category', methods=['POST'])
+@login_required
+def add_category():
+    name = request.form.get('name')
+    color = request.form.get('color', 'blue')
+    
+    if not name:
+        flash('Please enter a valid category name.')
+        return redirect(url_for('dashboard'))
+    
+    # Check if category with same name already exists
+    if Category.query.filter_by(name=name, user_id=current_user.id).first():
+        flash('A category with this name already exists.')
+        return redirect(url_for('dashboard'))
+    
+    new_category = Category(
+        name=name,
+        color=color,
+        user_id=current_user.id
+    )
+    
+    db.session.add(new_category)
+    db.session.commit()
+    
+    return redirect(url_for('dashboard'))
+
+@app.route('/edit_category/<int:category_id>', methods=['POST'])
+@login_required
+def edit_category(category_id):
+    category = Category.query.filter_by(id=category_id, user_id=current_user.id).first_or_404()
+    
+    name = request.form.get('name')
+    color = request.form.get('color')
+    
+    if not name:
+        flash('Please enter a valid category name.')
+        return redirect(url_for('dashboard'))
+    
+    # Check if another category with same name already exists
+    existing = Category.query.filter_by(name=name, user_id=current_user.id).first()
+    if existing and existing.id != category_id:
+        flash('A category with this name already exists.')
+        return redirect(url_for('dashboard'))
+    
+    category.name = name
+    category.color = color
+    
+    db.session.commit()
+    return redirect(url_for('dashboard'))
+
+@app.route('/delete_category/<int:category_id>', methods=['POST'])
+@login_required
+def delete_category(category_id):
+    category = Category.query.filter_by(id=category_id, user_id=current_user.id).first_or_404()
+    
+    # Update tasks that use this category
+    tasks = Task.query.filter_by(category_id=category_id).all()
+    for task in tasks:
+        task.category_id = None
+    
+    db.session.delete(category)
     db.session.commit()
     return redirect(url_for('dashboard'))
 
