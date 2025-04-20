@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}DayWise - Task Management App{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+        <!-- Hero Section -->
+        <div class="p-8 md:p-12 text-center">
+            <h1 class="text-4xl font-bold text-blue-500 dark:text-blue-400 mb-4">DayWise</h1>
+            <p class="text-xl text-gray-600 dark:text-gray-300 mb-8">Organize your day, boost your productivity</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{{ url_for('login') }}" class="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 dark:hover:bg-blue-400 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                    Login
+                </a>
+                <a href="{{ url_for('register') }}" class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                    Register
+                </a>
+            </div>
+        </div>
+        
+        <!-- Features Section -->
+        <div class="bg-gray-50 dark:bg-gray-700 p-8">
+            <h2 class="text-2xl font-semibold text-center text-gray-800 dark:text-gray-200 mb-8">Features</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Feature 1 -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+                    <div class="text-blue-500 dark:text-blue-400 mb-4 flex justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-checks">
+                            <path d="m3 17 2 2 4-4"/>
+                            <path d="m3 7 2 2 4-4"/>
+                            <path d="M13 6h8"/>
+                            <path d="M13 12h8"/>
+                            <path d="M13 18h8"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200 text-center mb-2">Task Management</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-center">Organize tasks with priorities and time blocks</p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+                    <div class="text-blue-500 dark:text-blue-400 mb-4 flex justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                            <line x1="16" x2="16" y1="2" y2="6"/>
+                            <line x1="8" x2="8" y1="2" y2="6"/>
+                            <line x1="3" x2="21" y1="10" y2="10"/>
+                            <path d="M8 14h.01"/>
+                            <path d="M12 14h.01"/>
+                            <path d="M16 14h.01"/>
+                            <path d="M8 18h.01"/>
+                            <path d="M12 18h.01"/>
+                            <path d="M16 18h.01"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200 text-center mb-2">Daily Planning</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-center">Plan your day with morning, afternoon, and evening blocks</p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+                    <div class="text-blue-500 dark:text-blue-400 mb-4 flex justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart-2">
+                            <line x1="18" x2="18" y1="20" y2="10"/>
+                            <line x1="12" x2="12" y1="20" y2="4"/>
+                            <line x1="6" x2="6" y1="20" y2="14"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200 text-center mb-2">Progress Tracking</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-center">Track your daily progress and productivity</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Call to Action -->
+        <div class="p-8 text-center">
+            <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Ready to boost your productivity?</h2>
+            <p class="text-gray-600 dark:text-gray-400 mb-6">Join DayWise today and start organizing your tasks efficiently.</p>
+            <a href="{{ url_for('register') }}" class="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 dark:hover:bg-blue-400 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                Get Started
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
