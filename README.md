@@ -4,6 +4,10 @@ DayWise is a web-based task management application built with Flask that helps u
 
 ![DayWise Screenshot](static/dashboard.png)
 
+## Live Demo
+
+The application is live and can be accessed at: [https://zold.pythonanywhere.com](https://zold.pythonanywhere.com)
+
 ## Features
 
 - **User Authentication**: Secure login and registration system
