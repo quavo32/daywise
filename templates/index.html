@@ -3,32 +3,93 @@
 {% block title %}DayWise - Task Management App{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-        <!-- Hero Section -->
-        <div class="p-8 md:p-12 text-center">
-            <h1 class="text-4xl font-bold text-blue-500 dark:text-blue-400 mb-4">DayWise</h1>
-            <p class="text-xl text-gray-600 dark:text-gray-300 mb-8">Organize your day, boost your productivity</p>
+<!-- Enhanced Hero Section with Modern Glassmorphism -->
+<div class="space-y-12">
+    <!-- Main Hero Card -->
+    <div class="glass-effect rounded-3xl shadow-2xl overflow-hidden border-animate">
+        <!-- Hero Content -->
+        <div class="relative p-12 md:p-20 text-center">
+            <!-- Animated Background Elements -->
+            <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                <div class="absolute top-20 left-10 w-20 h-20 bg-blue-500/10 rounded-full blur-xl animate-pulse"></div>
+                <div class="absolute bottom-20 right-10 w-32 h-32 bg-purple-500/10 rounded-full blur-xl animate-pulse" style="animation-delay: 1s;"></div>
+                <div class="absolute top-40 right-20 w-16 h-16 bg-green-500/10 rounded-full blur-xl animate-pulse" style="animation-delay: 2s;"></div>
+            </div>
             
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ url_for('login') }}" class="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 dark:hover:bg-blue-400 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-                    Login
-                </a>
-                <a href="{{ url_for('register') }}" class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-                    Register
-                </a>
+            <!-- Logo and Title -->
+            <div class="relative z-10">
+                <div class="flex justify-center mb-8">
+                    <div class="relative">
+                        <div class="absolute -inset-4 bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 rounded-full blur-lg opacity-30 animate-pulse"></div>
+                        <div class="relative bg-white dark:bg-gray-800 rounded-full p-6 shadow-xl">
+                            <svg class="w-16 h-16 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 2L3 7v11a1 1 0 001 1h12a1 1 0 001-1V7l-7-5z"/>
+                                <path d="M9 12h2v5H9v-5z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <h1 class="text-6xl md:text-7xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-green-600 bg-clip-text text-transparent mb-6 floating">
+                    DayWise
+                </h1>
+                
+                <p class="text-2xl md:text-3xl text-gray-700 dark:text-gray-300 mb-4 font-light">
+                    Organize your day, 
+                    <span class="font-semibold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                        boost your productivity
+                    </span>
+                </p>
+                
+                <p class="text-lg text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
+                    Transform your daily chaos into organized success with intelligent task management, 
+                    time blocking, and progress tracking.
+                </p>
+                
+                <!-- Enhanced Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                    <a href="{{ url_for('register') }}" class="group relative px-8 py-4 btn-gradient text-white rounded-2xl font-semibold text-lg shadow-2xl hover:shadow-3xl focus:outline-none focus:ring-4 focus:ring-blue-500/50 transition-all duration-300 flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rocket group-hover:translate-y-[-2px] transition-transform duration-300">
+                            <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+                            <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+                            <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+                            <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+                        </svg>
+                        <span>Get Started Free</span>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="group px-8 py-4 bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-200 rounded-2xl font-semibold text-lg shadow-xl hover:shadow-2xl hover:bg-white dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-400/50 transition-all duration-300 flex items-center gap-3 border border-gray-200 dark:border-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-in group-hover:translate-x-1 transition-transform duration-300">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                            <polyline points="10 17 15 12 10 7"/>
+                            <line x1="15" y1="12" x2="3" y2="12"/>
+                        </svg>
+                        <span>Login</span>
+                    </a>
+                </div>
             </div>
         </div>
+    </div>
+    
+    <!-- Enhanced Features Section -->
+    <div class="glass-effect rounded-3xl shadow-2xl p-12 border-animate">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+                Why Choose 
+                <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">DayWise</span>?
+            </h2>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                Discover powerful features designed to transform your productivity and help you achieve more every day.
+            </p>
+        </div>
         
-        <!-- Features Section -->
-        <div class="bg-gray-50 dark:bg-gray-700 p-8">
-            <h2 class="text-2xl font-semibold text-center text-gray-800 dark:text-gray-200 mb-8">Features</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Feature 1 -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                    <div class="text-blue-500 dark:text-blue-400 mb-4 flex justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-checks">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Enhanced Feature 1 -->
+            <div class="group glass-effect rounded-2xl p-8 task-card border-animate">
+                <div class="relative mb-6">
+                    <div class="absolute -inset-2 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full blur opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
+                    <div class="relative bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-4 text-white shadow-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-checks mx-auto">
                             <path d="m3 17 2 2 4-4"/>
                             <path d="m3 7 2 2 4-4"/>
                             <path d="M13 6h8"/>
@@ -36,14 +97,28 @@
                             <path d="M13 18h8"/>
                         </svg>
                     </div>
-                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200 text-center mb-2">Task Management</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-center">Organize tasks with priorities and time blocks</p>
                 </div>
-                
-                <!-- Feature 2 -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                    <div class="text-blue-500 dark:text-blue-400 mb-4 flex justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days">
+                <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 text-center mb-4">Smart Task Management</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+                    Organize tasks with intelligent priorities, categories, and time blocks. 
+                    Never miss what matters most.
+                </p>
+                <div class="mt-6 flex justify-center">
+                    <div class="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check">
+                            <path d="M20 6 9 17l-5-5"/>
+                        </svg>
+                        Priority-based organization
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Enhanced Feature 2 -->
+            <div class="group glass-effect rounded-2xl p-8 task-card border-animate">
+                <div class="relative mb-6">
+                    <div class="absolute -inset-2 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full blur opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
+                    <div class="relative bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl p-4 text-white shadow-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days mx-auto">
                             <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
                             <line x1="16" x2="16" y1="2" y2="6"/>
                             <line x1="8" x2="8" y1="2" y2="6"/>
@@ -56,33 +131,221 @@
                             <path d="M16 18h.01"/>
                         </svg>
                     </div>
-                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200 text-center mb-2">Daily Planning</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-center">Plan your day with morning, afternoon, and evening blocks</p>
                 </div>
-                
-                <!-- Feature 3 -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-                    <div class="text-blue-500 dark:text-blue-400 mb-4 flex justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart-2">
-                            <line x1="18" x2="18" y1="20" y2="10"/>
-                            <line x1="12" x2="12" y1="20" y2="4"/>
-                            <line x1="6" x2="6" y1="20" y2="14"/>
+                <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 text-center mb-4">Time Block Planning</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+                    Structure your day with morning, afternoon, and evening blocks. 
+                    Maximize productivity with focused time management.
+                </p>
+                <div class="mt-6 flex justify-center">
+                    <div class="flex items-center gap-2 text-sm text-purple-600 dark:text-purple-400 font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Structured daily workflow
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Enhanced Feature 3 -->
+            <div class="group glass-effect rounded-2xl p-8 task-card border-animate">
+                <div class="relative mb-6">
+                    <div class="absolute -inset-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full blur opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
+                    <div class="relative bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-4 text-white shadow-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up mx-auto">
+                            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+                            <polyline points="16 7 22 7 22 13"/>
                         </svg>
                     </div>
-                    <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200 text-center mb-2">Progress Tracking</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-center">Track your daily progress and productivity</p>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 text-center mb-4">Progress Analytics</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+                    Track your daily progress with visual analytics and insights. 
+                    Celebrate achievements and identify improvement areas.
+                </p>
+                <div class="mt-6 flex justify-center">
+                    <div class="flex items-center gap-2 text-sm text-green-600 dark:text-green-400 font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart">
+                            <line x1="12" x2="12" y1="20" y2="10"/>
+                            <line x1="18" x2="18" y1="20" y2="4"/>
+                            <line x1="6" x2="6" y1="20" y2="16"/>
+                        </svg>
+                        Visual progress tracking
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Call to Action -->
-        <div class="p-8 text-center">
-            <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Ready to boost your productivity?</h2>
-            <p class="text-gray-600 dark:text-gray-400 mb-6">Join DayWise today and start organizing your tasks efficiently.</p>
-            <a href="{{ url_for('register') }}" class="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 dark:hover:bg-blue-400 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
-                Get Started
-            </a>
+    </div>
+    
+    <!-- Enhanced Call to Action -->
+    <div class="glass-effect rounded-3xl shadow-2xl p-12 text-center border-animate">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-6">
+                Ready to Transform Your 
+                <span class="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">Productivity</span>?
+            </h2>
+            <p class="text-xl text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+                Join thousands of productive people who have already transformed their daily workflow with DayWise. 
+                Start your journey to organized success today.
+            </p>
+            
+            <!-- Stats Row -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="text-center">
+                    <div class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">10,000+</div>
+                    <div class="text-gray-600 dark:text-gray-400">Tasks Completed</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">95%</div>
+                    <div class="text-gray-600 dark:text-gray-400">User Satisfaction</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-2">2x</div>
+                    <div class="text-gray-600 dark:text-gray-400">Productivity Increase</div>
+                </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                <a href="{{ url_for('register') }}" class="group px-10 py-5 btn-gradient text-white rounded-2xl font-bold text-xl shadow-2xl hover:shadow-3xl focus:outline-none focus:ring-4 focus:ring-blue-500/50 transition-all duration-300 flex items-center justify-center gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles group-hover:scale-110 transition-transform duration-300">
+                        <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+                        <path d="M5 3v4"/>
+                        <path d="M19 17v4"/>
+                        <path d="M3 5h4"/>
+                        <path d="M17 19h4"/>
+                    </svg>
+                    <span>Start Free Today</span>
+                </a>
+                <a href="#features" class="group px-8 py-5 bg-white/80 dark:bg-gray-800/80 text-gray-800 dark:text-gray-200 rounded-2xl font-semibold text-xl shadow-xl hover:shadow-2xl hover:bg-white dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-400/50 transition-all duration-300 flex items-center justify-center gap-3 border border-gray-200 dark:border-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-circle group-hover:scale-110 transition-transform duration-300">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polygon points="10 8 16 12 10 16 10 8"/>
+                    </svg>
+                    <span>See Demo</span>
+                </a>
+            </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in');
+                }
+            });
+        }, observerOptions);
+        
+        // Observe feature cards
+        document.querySelectorAll('.task-card').forEach(card => {
+            observer.observe(card);
+        });
+        
+        // Add counter animation for stats
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const currentValue = Math.floor(progress * (end - start) + start);
+                
+                if (element.textContent.includes('%')) {
+                    element.textContent = currentValue + '%';
+                } else if (element.textContent.includes('x')) {
+                    element.textContent = currentValue + 'x';
+                } else {
+                    element.textContent = currentValue.toLocaleString() + '+';
+                }
+                
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+        
+        // Animate stats when they come into view
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const text = entry.target.textContent;
+                    if (text.includes('10,000')) {
+                        animateValue(entry.target, 0, 10000, 2000);
+                    } else if (text.includes('95%')) {
+                        animateValue(entry.target, 0, 95, 1500);
+                    } else if (text.includes('2x')) {
+                        animateValue(entry.target, 0, 2, 1000);
+                    }
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        // Observe stats
+        document.querySelectorAll('.text-3xl.font-bold').forEach(stat => {
+            statsObserver.observe(stat);
+        });
+        
+        // Add hover effects for buttons
+        document.querySelectorAll('a[href]').forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            link.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    });
+    
+    // Add CSS for fade-in animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-in {
+            animation: fade-in 0.8s ease-out forwards;
+        }
+        
+        .task-card {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+    `;
+    document.head.appendChild(style);
+</script>
 {% endblock %}
