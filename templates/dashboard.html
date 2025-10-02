@@ -126,89 +126,254 @@
             }
         });
     });
+    
+    // Enhanced Search Functionality
+    function filterTasks() {
+        const searchInput = document.getElementById('task-search');
+        const searchTerm = searchInput.value.toLowerCase();
+        const taskItems = document.querySelectorAll('#task-list li');
+        let visibleCount = 0;
+        
+        taskItems.forEach(function(item) {
+            const taskText = item.querySelector('.task-description')?.textContent.toLowerCase() || '';
+            const categoryText = item.querySelector('.task-category')?.textContent.toLowerCase() || '';
+            const priorityText = item.querySelector('.task-priority')?.textContent.toLowerCase() || '';
+            
+            const matches = taskText.includes(searchTerm) || 
+                          categoryText.includes(searchTerm) || 
+                          priorityText.includes(searchTerm);
+            
+            if (matches) {
+                item.style.display = 'block';
+                item.style.animation = 'fadeIn 0.3s ease-in-out';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        
+        // Show/hide no results message
+        const noResults = document.getElementById('no-search-results');
+        if (visibleCount === 0 && searchTerm !== '') {
+            if (!noResults) {
+                const message = document.createElement('div');
+                message.id = 'no-search-results';
+                message.className = 'text-center py-8 text-gray-500 dark:text-gray-400';
+                message.innerHTML = `
+                    <svg class="w-12 h-12 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <p>No tasks found matching "<strong>${searchTerm}</strong>"</p>
+                    <p class="text-sm mt-2">Try adjusting your search terms</p>
+                `;
+                document.getElementById('task-list').appendChild(message);
+            }
+        } else if (noResults) {
+            noResults.remove();
+        }
+    }
+    
+    // Add CSS animations
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+        
+        .task-fade-out {
+            animation: fadeOut 0.2s ease-in-out;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Set progress bar width after page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const progressBar = document.getElementById('progress-bar');
+        if (progressBar) {
+            const percentage = progressBar.dataset.progress;
+            progressBar.style.width = percentage + '%';
+        }
+    });
 </script>
 {% endblock %}
 
 {% block content %}
-<!-- Header -->
-<header class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col sm:flex-row justify-between items-center gap-3">
-    <div>
-        <h1 class="text-2xl font-bold text-blue-500 dark:text-blue-400">DayWise</h1>
-        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-2 flex-wrap">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days">
-                <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
-                <line x1="16" x2="16" y1="2" y2="6"/>
-                <line x1="8" x2="8" y1="2" y2="6"/>
-                <line x1="3" x2="21" y1="10" y2="10"/>
-                <path d="M8 14h.01"/>
-                <path d="M12 14h.01"/>
-                <path d="M16 14h.01"/>
-                <path d="M8 18h.01"/>
-                <path d="M12 18h.01"/>
-                <path d="M16 18h.01"/>
-            </svg>
-            <span>{{ gregorian_date }}</span>
-            <span class="opacity-50 hidden sm:inline">|</span>
-            <span>{{ hijri_date }}</span>
+<!-- Enhanced Header with Modern Glassmorphism -->
+<header class="glass-effect rounded-2xl shadow-2xl p-6 border-animate">
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <div class="absolute -inset-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full blur opacity-30 animate-pulse"></div>
+                <div class="relative bg-white dark:bg-gray-800 rounded-full p-3">
+                    <svg class="w-8 h-8 text-blue-500 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2L3 7v11a1 1 0 001 1h12a1 1 0 001-1V7l-7-5z"/>
+                        <path d="M9 12h2v5H9v-5z"/>
+                    </svg>
+                </div>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    DayWise
+                </h1>
+                <div class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    <div class="flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days text-blue-500">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                            <line x1="16" x2="16" y1="2" y2="6"/>
+                            <line x1="8" x2="8" y1="2" y2="6"/>
+                            <line x1="3" x2="21" y1="10" y2="10"/>
+                            <path d="M8 14h.01"/>
+                            <path d="M12 14h.01"/>
+                            <path d="M16 14h.01"/>
+                            <path d="M8 18h.01"/>
+                            <path d="M12 18h.01"/>
+                            <path d="M16 18h.01"/>
+                        </svg>
+                        <span class="font-medium">{{ gregorian_date }}</span>
+                    </div>
+                    <span class="text-gray-400">•</span>
+                    <div class="flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon text-purple-500">
+                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                        </svg>
+                        <span>{{ hijri_date }}</span>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="flex items-center gap-3">
-        <button onclick="toggleDarkMode()" aria-label="{{ 'Switch to Light Mode' if dark_mode else 'Switch to Dark Mode' }}" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 transition">
-            {% if dark_mode %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun">
-                <circle cx="12" cy="12" r="4"/>
-                <path d="M12 2v2"/>
-                <path d="M12 20v2"/>
-                <path d="m4.93 4.93 1.41 1.41"/>
-                <path d="m17.66 17.66 1.41 1.41"/>
-                <path d="M2 12h2"/>
-                <path d="M20 12h2"/>
-                <path d="m6.34 17.66-1.41 1.41"/>
-                <path d="m19.07 4.93-1.41 1.41"/>
-            </svg>
-            {% else %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon">
-                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-            </svg>
-            {% endif %}
-        </button>
-        <a href="{{ url_for('logout') }}" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-sm font-medium flex items-center gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                <polyline points="16 17 21 12 16 7"/>
-                <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-            Logout
-        </a>
+        
+        <div class="flex items-center gap-3">
+            <!-- Quick Stats -->
+            <div class="hidden md:flex items-center gap-4 px-4 py-2 bg-white/50 dark:bg-gray-700/50 rounded-xl">
+                <div class="text-center">
+                    <div class="text-xs text-gray-500 dark:text-gray-400">Tasks</div>
+                    <div class="font-bold text-blue-600 dark:text-blue-400">{{ total_tasks }}</div>
+                </div>
+                <div class="w-px h-6 bg-gray-300 dark:bg-gray-600"></div>
+                <div class="text-center">
+                    <div class="text-xs text-gray-500 dark:text-gray-400">Done</div>
+                    <div class="font-bold text-green-600 dark:text-green-400">{{ completed_tasks }}</div>
+                </div>
+                <div class="w-px h-6 bg-gray-300 dark:bg-gray-600"></div>
+                <div class="text-center">
+                    <div class="text-xs text-gray-500 dark:text-gray-400">Progress</div>
+                    <div class="font-bold text-purple-600 dark:text-purple-400">{{ percentage }}%</div>
+                </div>
+            </div>
+            
+            <!-- Theme Toggle Button -->
+            <button 
+                onclick="toggleDarkMode()" 
+                aria-label="{{ 'Switch to Light Mode' if dark_mode else 'Switch to Dark Mode' }}" 
+                class="relative p-3 rounded-xl bg-white/70 dark:bg-gray-700/70 hover:bg-white dark:hover:bg-gray-600 transition-all duration-300 group shadow-lg hover:shadow-xl"
+            >
+                <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-yellow-400 to-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                {% if dark_mode %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun text-yellow-500 relative z-10">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2"/>
+                    <path d="M12 20v2"/>
+                    <path d="m4.93 4.93 1.41 1.41"/>
+                    <path d="m17.66 17.66 1.41 1.41"/>
+                    <path d="M2 12h2"/>
+                    <path d="M20 12h2"/>
+                    <path d="m6.34 17.66-1.41 1.41"/>
+                    <path d="m19.07 4.93-1.41 1.41"/>
+                </svg>
+                {% else %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon text-blue-600 relative z-10">
+                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                </svg>
+                {% endif %}
+            </button>
+            
+            <!-- Logout Button -->
+            <a href="{{ url_for('logout') }}" class="group flex items-center gap-2 px-4 py-2 rounded-xl bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-800/50 text-red-600 dark:text-red-400 font-medium transition-all duration-300 shadow-lg hover:shadow-xl">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out group-hover:translate-x-1 transition-transform duration-200">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                <span class="text-sm">Logout</span>
+            </a>
+        </div>
     </div>
 </header>
 
-<!-- Category Filter Bar -->
-<div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mt-6 flex flex-wrap items-center gap-2">
-    <span class="text-sm font-medium text-gray-700 dark:text-gray-300 mr-2">Filter by Category:</span>
-    <a href="{{ url_for('dashboard') }}" class="px-3 py-1 rounded-full text-xs font-medium {% if current_category == 'all' or current_category is none %}bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200{% else %}bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600{% endif %} transition">
-        All
-    </a>
-    {% for category in categories %}
-        <a href="{{ url_for('dashboard', category=category.id) }}" class="px-3 py-1 rounded-full text-xs font-medium {% if current_category|string == category.id|string %}bg-{{ category.color }}-100 text-{{ category.color }}-800 dark:bg-{{ category.color }}-900 dark:text-{{ category.color }}-200{% else %}bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600{% endif %} transition">
-            {{ category.name }}
-        </a>
-    {% endfor %}
-    <div class="ml-auto flex gap-2">
-        <button id="manage-categories-btn" class="px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 hover:bg-purple-200 dark:hover:bg-purple-800 transition flex items-center gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings">
-                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-                <circle cx="12" cy="12" r="3"/>
-            </svg>
-            Manage
-        </button>
-        <button id="add-category-btn" class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 hover:bg-green-200 dark:hover:bg-green-800 transition flex items-center gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus">
-                <path d="M5 12h14"/>
-                <path d="M12 5v14"/>
-            </svg>
-            Add
-        </button>
+<!-- Enhanced Filter & Search Bar -->
+<div class="glass-effect rounded-2xl shadow-xl p-6 border-animate">
+    <!-- Search Bar -->
+    <div class="mb-6">
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search text-gray-400">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                </svg>
+            </div>
+            <input 
+                type="text" 
+                id="task-search" 
+                placeholder="Search your tasks..." 
+                class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 bg-white/70 dark:bg-gray-700/70 text-gray-900 dark:text-gray-100 shadow-sm hover:shadow-md"
+                onkeyup="filterTasks()"
+            >
+        </div>
+    </div>
+    
+    <!-- Category Filters -->
+    <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+        <div class="flex items-center gap-3">
+            <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-filter">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                </svg>
+                Categories:
+            </span>
+            <div class="flex flex-wrap items-center gap-2">
+                <a href="{{ url_for('dashboard') }}" class="group px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 shadow-sm hover:shadow-md {% if current_category == 'all' or current_category is none %}bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg{% else %}bg-white/70 dark:bg-gray-700/70 text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600{% endif %}">
+                    <span class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-grid">
+                            <rect width="18" height="18" x="3" y="3" rx="2"/>
+                            <path d="M9 9h6v6H9V9Z"/>
+                        </svg>
+                        All Tasks
+                    </span>
+                </a>
+                {% for category in categories %}
+                    <a href="{{ url_for('dashboard', category=category.id) }}" class="group px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 shadow-sm hover:shadow-md {% if current_category|string == category.id|string %}bg-{{ category.color }}-500 text-white shadow-lg{% else %}bg-white/70 dark:bg-gray-700/70 text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600{% endif %}">
+                        <span class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-{{ category.color }}-500 {% if current_category|string == category.id|string %}bg-white{% endif %}"></span>
+                            {{ category.name }}
+                        </span>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Category Management Buttons -->
+        <div class="flex gap-2 sm:ml-auto">
+            <button id="manage-categories-btn" class="group flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-800/50 transition-all duration-300 shadow-sm hover:shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings group-hover:rotate-180 transition-transform duration-300">
+                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <span>Manage</span>
+            </button>
+            <button id="add-category-btn" class="group flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-800/50 transition-all duration-300 shadow-sm hover:shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus group-hover:rotate-90 transition-transform duration-300">
+                    <path d="M5 12h14"/>
+                    <path d="M12 5v14"/>
+                </svg>
+                <span>Add Category</span>
+            </button>
+        </div>
     </div>
 </div>
 
@@ -216,206 +381,409 @@
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
     <!-- Column 1: Progress & Add Task -->
     <div class="lg:col-span-1 space-y-6">
-        <!-- Today's Progress Widget -->
-        <section aria-labelledby="progress-heading" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h2 id="progress-heading" class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">Today's Progress</h2>
-            <div class="space-y-3 text-sm text-gray-600 dark:text-gray-300">
-                <div class="flex justify-between"><span>Total Tasks:</span> <span class="font-medium">{{ total_tasks }}</span></div>
-                <div class="flex justify-between"><span>Completed:</span> <span class="font-medium text-green-600 dark:text-green-400">{{ completed_tasks }}</span></div>
-                <div class="flex justify-between"><span>In Progress:</span> <span class="font-medium text-yellow-600 dark:text-yellow-400">{{ in_progress_tasks }}</span></div>
-            </div>
-            <div class="mt-4">
-                <label for="progress-bar" class="text-sm font-medium text-gray-600 dark:text-gray-300 block mb-1">Completion</label>
-                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                    <div id="progress-bar" class="bg-teal-600 h-2.5 rounded-full transition-all duration-300 ease-out" style="width: {{ percentage }}%" role="progressbar" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+        <!-- Enhanced Today's Progress Widget -->
+        <section aria-labelledby="progress-heading" class="glass-effect rounded-2xl shadow-xl p-8 border-animate floating">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl text-white shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up">
+                        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+                        <polyline points="16 7 22 7 22 13"/>
+                    </svg>
                 </div>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">{{ percentage }}% Complete</p>
+                <div>
+                    <h2 id="progress-heading" class="text-xl font-bold text-gray-800 dark:text-gray-100">Today's Progress</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Track your productivity</p>
+                </div>
+            </div>
+            
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="text-center p-4 bg-white/50 dark:bg-gray-700/50 rounded-xl">
+                    <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ total_tasks }}</div>
+                    <div class="text-xs text-gray-600 dark:text-gray-400 font-medium">Total</div>
+                </div>
+                <div class="text-center p-4 bg-white/50 dark:bg-gray-700/50 rounded-xl">
+                    <div class="text-2xl font-bold text-green-600 dark:text-green-400">{{ completed_tasks }}</div>
+                    <div class="text-xs text-gray-600 dark:text-gray-400 font-medium">Done</div>
+                </div>
+                <div class="text-center p-4 bg-white/50 dark:bg-gray-700/50 rounded-xl">
+                    <div class="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{{ in_progress_tasks }}</div>
+                    <div class="text-xs text-gray-600 dark:text-gray-400 font-medium">Pending</div>
+                </div>
+            </div>
+            
+            <!-- Enhanced Progress Bar -->
+            <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Completion Rate</span>
+                    <span class="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{{ percentage }}%</span>
+                </div>
+                <div class="relative">
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 overflow-hidden">
+                        <div 
+                            id="progress-bar" 
+                            class="bg-gradient-to-r from-blue-500 to-purple-600 h-full rounded-full transition-all duration-1000 ease-out progress-glow relative overflow-hidden"
+                            data-progress="{{ percentage }}"
+                            role="progressbar" 
+                            aria-valuenow="{{ percentage }}" 
+                            aria-valuemin="0" 
+                            aria-valuemax="100"
+                        >
+                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+                        </div>
+                    </div>
+                    <!-- Progress Milestone Markers -->
+                    <div class="absolute top-0 w-full h-4 flex justify-between items-center px-1">
+                        <div class="w-1 h-1 bg-white rounded-full opacity-60"></div>
+                        <div class="w-1 h-1 bg-white rounded-full opacity-60"></div>
+                        <div class="w-1 h-1 bg-white rounded-full opacity-60"></div>
+                        <div class="w-1 h-1 bg-white rounded-full opacity-60"></div>
+                    </div>
+                </div>
+                {% if percentage == 100 %}
+                    <div class="flex items-center justify-center gap-2 mt-4 p-3 bg-green-100 dark:bg-green-900/30 rounded-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trophy text-yellow-500">
+                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+                            <path d="M4 22h16"/>
+                            <path d="M10 14.66V17c0 .55.47.98.97 1.21C12.2 18.75 13.1 19 14 19s1.8-.25 3.03-.79c.5-.23.97-.66.97-1.21v-2.34"/>
+                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+                        </svg>
+                        <span class="text-green-800 dark:text-green-200 font-bold text-sm">All tasks completed! 🎉</span>
+                    </div>
+                {% elif percentage >= 80 %}
+                    <p class="text-xs text-green-600 dark:text-green-400 font-medium text-center mt-2">Great progress! Almost there!</p>
+                {% elif percentage >= 50 %}
+                    <p class="text-xs text-yellow-600 dark:text-yellow-400 font-medium text-center mt-2">Good work! Keep it up!</p>
+                {% elif percentage > 0 %}
+                    <p class="text-xs text-blue-600 dark:text-blue-400 font-medium text-center mt-2">Nice start! You've got this!</p>
+                {% else %}
+                    <p class="text-xs text-gray-600 dark:text-gray-400 font-medium text-center mt-2">Ready to start your day?</p>
+                {% endif %}
             </div>
         </section>
 
-        <!-- Add New Task Widget -->
-        <section aria-labelledby="add-task-heading" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h2 id="add-task-heading" class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">Add New Task</h2>
-            <form action="{{ url_for('add_task') }}" method="POST" class="space-y-4">
-                <!-- Task Description -->
-                <div>
-                    <label for="task-desc" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Task</label>
-                    <input id="task-desc" name="description" type="text" placeholder="e.g., Finalize presentation" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" required>
+        <!-- Enhanced Add New Task Widget -->
+        <section aria-labelledby="add-task-heading" class="glass-effect rounded-2xl shadow-xl p-8 border-animate">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="p-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl text-white shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-circle">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M8 12h8"/>
+                        <path d="M12 8v8"/>
+                    </svg>
                 </div>
-                <!-- Priority & Estimated Time -->
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label for="task-priority" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Priority</label>
-                        <select id="task-priority" name="priority" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                <div>
+                    <h2 id="add-task-heading" class="text-xl font-bold text-gray-800 dark:text-gray-100">Add New Task</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Create your next productive action</p>
+                </div>
+            </div>
+            
+            <form action="{{ url_for('add_task') }}" method="POST" class="space-y-6">
+                <!-- Enhanced Task Description Input -->
+                <div class="space-y-2">
+                    <label for="task-desc" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        <span class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-edit">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z"/>
+                            </svg>
+                            Task Description
+                        </span>
+                    </label>
+                    <input 
+                        id="task-desc" 
+                        name="description" 
+                        type="text" 
+                        placeholder="e.g., Finalize presentation for client meeting" 
+                        class="w-full p-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 bg-white/70 dark:bg-gray-700/70 text-gray-900 dark:text-gray-100 shadow-sm hover:shadow-md" 
+                        required
+                    >
+                </div>
+                
+                <!-- Enhanced Priority & Estimated Time -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label for="task-priority" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            <span class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flag">
+                                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1Z"/>
+                                    <line x1="4" x2="4" y1="22" y2="15"/>
+                                </svg>
+                                Priority Level
+                            </span>
+                        </label>
+                        <select id="task-priority" name="priority" class="w-full p-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 bg-white/70 dark:bg-gray-700/70 text-gray-900 dark:text-gray-100 shadow-sm hover:shadow-md">
                             {% for key, value in PRIORITIES.items() %}
                                 <option value="{{ key }}">{{ value }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div>
-                        <label for="task-time" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Est. Time (min)</label>
-                        <input id="task-time" name="estimated_time" type="number" placeholder="e.g., 60" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" min="5" max="600" step="5" required>
+                    <div class="space-y-2">
+                        <label for="task-time" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            <span class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                Est. Time (min)
+                            </span>
+                        </label>
+                        <input 
+                            id="task-time" 
+                            name="estimated_time" 
+                            type="number" 
+                            placeholder="60" 
+                            class="w-full p-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 bg-white/70 dark:bg-gray-700/70 text-gray-900 dark:text-gray-100 shadow-sm hover:shadow-md" 
+                            min="5" 
+                            max="600" 
+                            step="5" 
+                            required
+                        >
                     </div>
                 </div>
-                <!-- Time Block -->
-                <div>
-                    <label for="task-block" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Assign to Block</label>
-                    <select id="task-block" name="time_block" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                        {% for key, value in TIME_BLOCKS.items() %}
-                            <option value="{{ key }}">{{ value }}</option>
-                        {% endfor %}
-                    </select>
+                
+                <!-- Enhanced Time Block & Category -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label for="task-block" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            <span class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun">
+                                    <circle cx="12" cy="12" r="4"/>
+                                    <path d="M12 2v2"/>
+                                    <path d="M12 20v2"/>
+                                    <path d="m4.93 4.93 1.41 1.41"/>
+                                    <path d="m17.66 17.66 1.41 1.41"/>
+                                    <path d="M2 12h2"/>
+                                    <path d="M20 12h2"/>
+                                    <path d="m6.34 17.66-1.41 1.41"/>
+                                    <path d="m19.07 4.93-1.41 1.41"/>
+                                </svg>
+                                Time Block
+                            </span>
+                        </label>
+                        <select id="task-block" name="time_block" class="w-full p-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 bg-white/70 dark:bg-gray-700/70 text-gray-900 dark:text-gray-100 shadow-sm hover:shadow-md">
+                            {% for key, value in TIME_BLOCKS.items() %}
+                                <option value="{{ key }}">{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label for="task-category" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            <span class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag">
+                                    <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/>
+                                    <path d="M7 7h.01"/>
+                                </svg>
+                                Category
+                            </span>
+                        </label>
+                        <select id="task-category" name="category_id" class="w-full p-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 bg-white/70 dark:bg-gray-700/70 text-gray-900 dark:text-gray-100 shadow-sm hover:shadow-md">
+                            <option value="none">No Category</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
-                <!-- Category Selection -->
-                <div>
-                    <label for="task-category" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>
-                    <select id="task-category" name="category_id" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                        <option value="none">No Category</option>
-                        {% for category in categories %}
-                            <option value="{{ category.id }}">{{ category.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <!-- Submit Button -->
-                <button type="submit" class="w-full bg-blue-500 text-white px-5 py-2.5 rounded-md hover:bg-blue-600 dark:hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition duration-150 ease-in-out flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus">
+                
+                <!-- Enhanced Submit Button -->
+                <button type="submit" class="w-full btn-gradient text-white px-6 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-500/50 transition-all duration-300 flex items-center justify-center gap-3 group">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus group-hover:rotate-90 transition-transform duration-300">
                         <path d="M5 12h14"/>
                         <path d="M12 5v14"/>
                     </svg>
-                    Add Task
+                    <span>Add Task</span>
                 </button>
             </form>
         </section>
     </div>
 
-    <!-- Column 2: Task List/Schedule -->
-    <section aria-labelledby="schedule-heading" class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <div class="flex justify-between items-center mb-4">
-            <h2 id="schedule-heading" class="text-lg font-semibold text-gray-700 dark:text-gray-200">Your Schedule</h2>
-            <!-- Reset All Tasks Button -->
-            <form action="{{ url_for('reset_all_tasks') }}" method="POST" onsubmit="return confirmReset()">
-                <button type="submit" 
-                    {% if total_tasks == 0 or completed_tasks == 0 %}disabled{% endif %}
-                    class="px-3 py-1 rounded-md text-sm text-yellow-700 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-800/50 hover:bg-yellow-200 dark:hover:bg-yellow-700/50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-1 dark:focus:ring-offset-gray-800 transition flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-ccw">
-                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-                        <path d="M3 3v5h5"/>
+    <!-- Enhanced Task List/Schedule Section -->
+    <section aria-labelledby="schedule-heading" class="lg:col-span-2 glass-effect rounded-2xl shadow-xl p-8 border-animate">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <div class="flex items-center gap-3">
+                <div class="p-3 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl text-white shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-checks">
+                        <path d="m3 17 2 2 4-4"/>
+                        <path d="m3 7 2 2 4-4"/>
+                        <path d="M13 6h8"/>
+                        <path d="M13 12h8"/>
+                        <path d="M13 18h8"/>
                     </svg>
-                    Reset All
-                </button>
-            </form>
+                </div>
+                <div>
+                    <h2 id="schedule-heading" class="text-2xl font-bold text-gray-800 dark:text-gray-100">Your Schedule</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Manage and track your daily tasks</p>
+                </div>
+            </div>
+            
+            <!-- Enhanced Action Buttons -->
+            <div class="flex items-center gap-3">
+                <!-- Reset All Tasks Button -->
+                <form action="{{ url_for('reset_all_tasks') }}" method="POST" onsubmit="return confirmReset()">
+                    <button type="submit" 
+                        {% if total_tasks == 0 or completed_tasks == 0 %}disabled{% endif %}
+                        class="group flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-yellow-700 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-800/50 hover:bg-yellow-200 dark:hover:bg-yellow-700/50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-ccw group-hover:rotate-180 transition-transform duration-300">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                            <path d="M3 3v5h5"/>
+                        </svg>
+                        <span>Reset All</span>
+                    </button>
+                </form>
+            </div>
         </div>
 
         {% if tasks|length == 0 %}
-            <p class="text-center text-gray-500 dark:text-gray-400 py-6">No tasks yet. Add some tasks using the form!</p>
+            <div class="text-center py-16">
+                <div class="glass-effect rounded-2xl p-8 max-w-md mx-auto">
+                    <svg class="w-16 h-16 mx-auto mb-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">No tasks yet!</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">Start organizing your day by adding your first task.</p>
+                    <div class="flex justify-center">
+                        <button onclick="document.getElementById('task-desc').focus()" class="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl font-medium hover:shadow-lg transition-all duration-300">
+                            Add Your First Task
+                        </button>
+                    </div>
+                </div>
+            </div>
         {% else %}
-            <ul class="space-y-3">
+            <ul id="task-list" class="space-y-4">
                 {% for task in tasks %}
-                    <li>
-                        <!-- Task Display Row -->
-                        <div id="task-display-{{ task.id }}" class="flex items-center justify-between p-3 rounded-md transition duration-150 ease-in-out border dark:border-gray-700 
+                    <li class="task-item task-card">
+                        <!-- Enhanced Task Display Row -->
+                        <div id="task-display-{{ task.id }}" class="group relative overflow-hidden rounded-2xl border-2 transition-all duration-300 
                             {% if task.is_completed %}
-                                bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-700/50 opacity-70
+                                bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-700/50 opacity-80
                             {% else %}
-                                bg-white dark:bg-gray-700/50 border-gray-200 hover:shadow-sm dark:hover:bg-gray-700
+                                bg-white/80 dark:bg-gray-800/80 border-gray-200 dark:border-gray-700 hover:shadow-xl hover:border-blue-300 dark:hover:border-blue-600
                             {% endif %}">
+                            <!-- Priority Indicator Bar -->
+                            <div class="absolute left-0 top-0 w-1 h-full 
+                                {% if task.priority == 'high' %}bg-red-500
+                                {% elif task.priority == 'medium' %}bg-yellow-500
+                                {% else %}bg-blue-500
+                                {% endif %}"></div>
+                            
+                            <div class="flex items-center justify-between p-6">
                             <!-- Left side: Toggle + Details -->
-                            <div class="flex items-center gap-3 flex-grow mr-3 overflow-hidden">
+                            <div class="flex items-center gap-4 flex-grow mr-4 overflow-hidden">
+                                <!-- Enhanced Toggle Button -->
                                 <form action="{{ url_for('toggle_task', task_id=task.id) }}" method="POST" class="flex-shrink-0">
-                                    <button type="submit" aria-label="{{ 'Mark task as incomplete' if task.is_completed else 'Mark task as complete' }}" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-1 dark:focus:ring-offset-gray-800 rounded-full p-1 transition">
+                                    <button type="submit" aria-label="{{ 'Mark task as incomplete' if task.is_completed else 'Mark task as complete' }}" class="relative group p-2 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
                                         {% if task.is_completed %}
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle text-green-500">
-                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                                <polyline points="22 4 12 14.01 9 11.01"/>
+                                            <div class="absolute inset-0 bg-green-500 rounded-full animate-pulse opacity-20"></div>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle-2 text-green-600 relative z-10">
+                                                <circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.1"/>
+                                                <path d="M16 8l-6 6-3-3" stroke="currentColor"/>
                                             </svg>
                                         {% else %}
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle">
+                                            <div class="absolute inset-0 bg-gray-400 rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle text-gray-400 group-hover:text-blue-500 transition-colors duration-300 relative z-10">
                                                 <circle cx="12" cy="12" r="10"/>
                                             </svg>
                                         {% endif %}
                                     </button>
                                 </form>
+                                
+                                <!-- Enhanced Task Content -->
                                 <div class="flex-grow overflow-hidden">
-                                    <p class="font-medium truncate {% if task.is_completed %}line-through text-gray-500 dark:text-gray-400{% else %}text-gray-800 dark:text-gray-100{% endif %}">
-                                        {{ task.description }}
-                                    </p>
-                                    <div class="flex items-center flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        <span class="flex items-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock mr-1 flex-shrink-0">
-                                                <circle cx="12" cy="12" r="10"/>
-                                                <polyline points="12 6 12 12 16 14"/>
-                                            </svg>
-                                            {{ task.estimated_time }} min
-                                        </span>
-                                        <span class="flex items-center capitalize" title="Priority: {{ PRIORITIES[task.priority] }}">
-                                            {% if task.priority == 'low' %}
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down text-blue-500">
-                                                    <path d="m6 9 6 6 6-6"/>
-                                                </svg>
-                                            {% elif task.priority == 'medium' %}
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus text-yellow-500">
-                                                    <path d="M5 12h14"/>
-                                                </svg>
-                                            {% elif task.priority == 'high' %}
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up text-red-500">
-                                                    <path d="m18 15-6-6-6 6"/>
-                                                </svg>
-                                            {% endif %}
-                                            <span class="ml-1">{{ PRIORITIES[task.priority] }}</span>
-                                        </span>
-                                        <span class="flex items-center capitalize" title="Time Block: {{ TIME_BLOCKS[task.time_block] }}">
-                                            {% if task.time_block == 'any' %}
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-asterisk text-gray-500 dark:text-gray-400">
-                                                    <path d="M12 6v12"/>
-                                                    <path d="M17.196 9 6.804 15"/>
-                                                    <path d="m6.804 9 10.392 6"/>
-                                                </svg>
-                                            {% elif task.time_block == 'morning' %}
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sunrise text-orange-500">
-                                                    <path d="M12 2v8"/>
-                                                    <path d="m4.93 10.93 1.41 1.41"/>
-                                                    <path d="M2 18h2"/>
-                                                    <path d="M20 18h2"/>
-                                                    <path d="m17.66 12.34 1.41-1.41"/>
-                                                    <path d="M22 22H2"/>
-                                                    <path d="M16 5l-4 4-4-4"/>
-                                                    <path d="M4 14a1 1 0 0 1 0-2 1 1 0 0 1 0 2Z"/>
-                                                </svg>
-                                            {% elif task.time_block == 'afternoon' %}
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun text-yellow-500">
-                                                    <circle cx="12" cy="12" r="4"/>
-                                                    <path d="M12 2v2"/>
-                                                    <path d="M12 20v2"/>
-                                                    <path d="m4.93 4.93 1.41 1.41"/>
-                                                    <path d="m17.66 17.66 1.41 1.41"/>
-                                                    <path d="M2 12h2"/>
-                                                    <path d="M20 12h2"/>
-                                                    <path d="m6.34 17.66-1.41 1.41"/>
-                                                    <path d="m19.07 4.93-1.41 1.41"/>
-                                                </svg>
-                                            {% elif task.time_block == 'evening' %}
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sunset text-purple-500">
-                                                    <path d="M12 10V2"/>
-                                                    <path d="m4.93 10.93 1.41 1.41"/>
-                                                    <path d="M2 18h2"/>
-                                                    <path d="M20 18h2"/>
-                                                    <path d="m17.66 12.34 1.41-1.41"/>
-                                                    <path d="M22 22H2"/>
-                                                    <path d="m16 14-4-4-4 4"/>
-                                                    <path d="M4 18v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/>
-                                                </svg>
-                                            {% endif %}
-                                            <span class="ml-1">{{ TIME_BLOCKS[task.time_block] }}</span>
-                                        </span>
-                                        {% if task.category %}
-                                        <span class="flex items-center capitalize" title="Category: {{ task.category.name }}">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag text-{{ task.category.color }}-500">
-                                                <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/>
-                                                <path d="M7 7h.01"/>
-                                            </svg>
-                                            <span class="ml-1">{{ task.category.name }}</span>
-                                        </span>
-                                        {% endif %}
+                                    <div class="flex items-start justify-between gap-3">
+                                        <div class="flex-grow">
+                                            <p class="task-description text-lg font-semibold mb-2 {% if task.is_completed %}line-through text-gray-500 dark:text-gray-400{% else %}text-gray-900 dark:text-gray-100{% endif %}">
+                                                {{ task.description }}
+                                            </p>
+                                            <!-- Enhanced Task Metadata -->
+                                            <div class="flex flex-wrap items-center gap-3 mt-3">
+                                                <!-- Time Badge -->
+                                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-800">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock">
+                                                        <circle cx="12" cy="12" r="10"/>
+                                                        <polyline points="12 6 12 12 16 14"/>
+                                                    </svg>
+                                                    {{ task.estimated_time }} min
+                                                </span>
+                                                
+                                                <!-- Priority Badge -->
+                                                <span class="task-priority inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border
+                                                    {% if task.priority == 'high' %}bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 border-red-200 dark:border-red-800
+                                                    {% elif task.priority == 'medium' %}bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 border-yellow-200 dark:border-yellow-800
+                                                    {% else %}bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-800
+                                                    {% endif %}">
+                                                    {% if task.priority == 'low' %}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down">
+                                                            <path d="M12 5v14"/>
+                                                            <path d="m19 12-7 7-7-7"/>
+                                                        </svg>
+                                                    {% elif task.priority == 'medium' %}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus">
+                                                            <path d="M5 12h14"/>
+                                                        </svg>
+                                                    {% elif task.priority == 'high' %}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up">
+                                                            <path d="M12 19V5"/>
+                                                            <path d="m5 12 7-7 7 7"/>
+                                                        </svg>
+                                                    {% endif %}
+                                                    {{ PRIORITIES[task.priority] }}
+                                                </span>
+                                                
+                                                <!-- Time Block Badge -->
+                                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border
+                                                    {% if task.time_block == 'morning' %}bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200 border-orange-200 dark:border-orange-800
+                                                    {% elif task.time_block == 'afternoon' %}bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 border-yellow-200 dark:border-yellow-800
+                                                    {% elif task.time_block == 'evening' %}bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-200 border-purple-200 dark:border-purple-800
+                                                    {% else %}bg-gray-100 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-600
+                                                    {% endif %}">
+                                                    {% if task.time_block == 'any' %}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock">
+                                                            <circle cx="12" cy="12" r="10"/>
+                                                            <polyline points="12 6 12 12 16 14"/>
+                                                        </svg>
+                                                    {% elif task.time_block == 'morning' %}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sunrise">
+                                                            <path d="M12 2v8"/>
+                                                            <path d="m4.93 10.93 1.41 1.41"/>
+                                                            <path d="M2 18h2"/>
+                                                            <path d="M20 18h2"/>
+                                                            <path d="m17.66 12.34 1.41-1.41"/>
+                                                            <path d="M22 22H2"/>
+                                                        </svg>
+                                                    {% elif task.time_block == 'afternoon' %}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun">
+                                                            <circle cx="12" cy="12" r="4"/>
+                                                            <path d="M12 2v2"/>
+                                                            <path d="M12 20v2"/>
+                                                            <path d="m4.93 4.93 1.41 1.41"/>
+                                                            <path d="m17.66 17.66 1.41 1.41"/>
+                                                            <path d="M2 12h2"/>
+                                                            <path d="M20 12h2"/>
+                                                            <path d="m6.34 17.66-1.41 1.41"/>
+                                                            <path d="m19.07 4.93-1.41 1.41"/>
+                                                        </svg>
+                                                    {% elif task.time_block == 'evening' %}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon">
+                                                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                                                        </svg>
+                                                    {% endif %}
+                                                    {{ TIME_BLOCKS[task.time_block] }}
+                                                </span>
+                                                
+                                                <!-- Category Badge -->
+                                                {% if task.category %}
+                                                <span class="task-category inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-{{ task.category.color }}-100 dark:bg-{{ task.category.color }}-900/30 text-{{ task.category.color }}-800 dark:text-{{ task.category.color }}-200 border border-{{ task.category.color }}-200 dark:border-{{ task.category.color }}-800">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag">
+                                                        <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/>
+                                                        <path d="M7 7h.01"/>
+                                                    </svg>
+                                                    {{ task.category.name }}
+                                                </span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

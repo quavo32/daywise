@@ -29,59 +29,243 @@
         });
     </script>
     <style>
-        /* Custom styles */
+        /* Custom Enhanced Styles */
         .dark {
             color-scheme: dark;
         }
         
         .dark body {
-            background-color: #111827;
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
             color: #f3f4f6;
         }
         
-        /* Icons styles */
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        
+        /* Enhanced Card Styles */
+        .glass-effect {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dark .glass-effect {
+            backdrop-filter: blur(16px);
+            background: rgba(31, 41, 55, 0.9);
+            border: 1px solid rgba(55, 65, 81, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Enhanced Progress Bar */
+        .progress-glow {
+            box-shadow: 0 0 15px rgba(20, 184, 166, 0.4);
+        }
+        
+        .dark .progress-glow {
+            box-shadow: 0 0 20px rgba(20, 184, 166, 0.6);
+        }
+        
+        /* Floating Animation */
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Pulse Animation for Important Elements */
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulse-glow {
+            from { box-shadow: 0 0 5px rgba(59, 130, 246, 0.3); }
+            to { box-shadow: 0 0 20px rgba(59, 130, 246, 0.6); }
+        }
+        
+        /* Enhanced Button Styles */
+        .btn-gradient {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Task Card Hover Effects */
+        .task-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .task-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark .task-card:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Smooth Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        
+        .dark ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+        }
+        
+        /* Icons styles with enhanced colors */
         .priority-low {
-            color: #3b82f6; /* blue-500 */
+            color: #3b82f6;
         }
         
         .priority-medium {
-            color: #eab308; /* yellow-500 */
+            color: #eab308;
         }
         
         .priority-high {
-            color: #ef4444; /* red-500 */
+            color: #ef4444;
         }
         
         .time-block-any {
-            color: #6b7280; /* gray-500 */
+            color: #6b7280;
         }
         
         .time-block-morning {
-            color: #f97316; /* orange-500 */
+            color: #f97316;
         }
         
         .time-block-afternoon {
-            color: #eab308; /* yellow-500 */
+            color: #eab308;
         }
         
         .time-block-evening {
-            color: #8b5cf6; /* purple-500 */
+            color: #8b5cf6;
+        }
+        
+        /* Loading Animation */
+        .loading-dots {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 20px;
+        }
+        
+        .loading-dots div {
+            position: absolute;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #3b82f6;
+            animation: loading-dots 1.2s linear infinite;
+        }
+        
+        .loading-dots div:nth-child(1) { left: 8px; animation-delay: 0s; }
+        .loading-dots div:nth-child(2) { left: 8px; animation-delay: -0.4s; }
+        .loading-dots div:nth-child(3) { left: 32px; animation-delay: -0.8s; }
+        
+        @keyframes loading-dots {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Enhanced Modal Backdrop */
+        .modal-backdrop {
+            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Notification Toast Styles */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        /* Enhanced Focus Styles */
+        .enhanced-focus:focus {
+            outline: none;
+            ring-offset: 2px;
+            ring: 2px solid rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        /* Subtle Border Animations */
+        .border-animate {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .border-animate::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+            animation: slide 2s infinite;
+        }
+        
+        @keyframes slide {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
-<body class="min-h-screen bg-gray-100 dark:bg-gray-900 font-sans p-4 md:p-8 transition-colors duration-300">
-    <div class="max-w-4xl mx-auto space-y-6">
+<body class="min-h-screen font-sans p-4 md:p-8 transition-all duration-500 ease-in-out">
+    <!-- Enhanced Background Pattern -->
+    <div class="fixed inset-0 pointer-events-none opacity-30">
+        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);"></div>
+    </div>
+    
+    <div class="relative max-w-7xl mx-auto space-y-8">
         {% if current_user.is_authenticated %}
-            <!-- Flash messages -->
+            <!-- Enhanced Flash messages -->
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-                        <ul>
-                            {% for message in messages %}
-                                <li>{{ message }}</li>
-                            {% endfor %}
-                        </ul>
+                    <div class="glass-effect rounded-xl border-l-4 border-red-500 p-4 mb-6 animate-pulse">
+                        <div class="flex items-center">
+                            <svg class="h-5 w-5 text-red-500 mr-3" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                            </svg>
+                            <div class="text-red-800 dark:text-red-200 font-medium">
+                                {% for message in messages %}
+                                    <p>{{ message }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
                 {% endif %}
             {% endwith %}
@@ -89,9 +273,23 @@
         
         {% block content %}{% endblock %}
         
-        <!-- Footer -->
-        <footer class="text-center text-xs text-gray-400 dark:text-gray-500 pt-4">
-            DayWise App
+        <!-- Enhanced Footer -->
+        <footer class="text-center py-8 mt-16">
+            <div class="glass-effect rounded-xl p-6 max-w-md mx-auto">
+                <div class="flex items-center justify-center space-x-2 text-gray-600 dark:text-gray-400">
+                    <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2L3 7v11a1 1 0 001 1h12a1 1 0 001-1V7l-7-5z"/>
+                        <path d="M9 12h2v5H9v-5z"/>
+                    </svg>
+                    <span class="text-sm font-medium">DayWise</span>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Organizing your day, one task at a time</p>
+                <div class="flex justify-center space-x-4 mt-4 text-xs">
+                    <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">v1.0</span>
+                    <span class="text-gray-400">•</span>
+                    <span class="text-gray-500 dark:text-gray-400">Made with ❤️</span>
+                </div>
+            </div>
         </footer>
     </div>
     
